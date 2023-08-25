@@ -1,33 +1,19 @@
-import { useSession, signIn, signOut } from "next-auth/react"
+import Layout from "@/components/Layout";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
 
 export default function Home() {
   const { data: session } = useSession();
-
-  if (!session) {
-    return (
-      <div className='bg-blue-900 w-screen h-screen flex items-center'>
-        <div className='text-center w-full'>
-          <button 
-            className='bg-white p-2 px-4 rounded-lg'
-            onClick={() => signIn('google')}
-          >
-            Login com Google
-          </button>
-        </div>
-      </div>
-    )
-  }
-
   return (
-    <div className='bg-blue-900 w-screen h-screen flex items-center'>
-      <div className='text-center w-full'>
-        <button 
-          className='bg-white p-2 px-4 rounded-lg'
-          onClick={() => signOut()}
-        >
-          Logado com {session.user.email}
-        </button>
+    <Layout>
+      <div className="flex justify-between text-blue-900">
+        <h2>Administrador Logado: <b>{session?.user?.name}</b></h2>
+        <img
+          src={session?.user?.image}
+          alt="Imagem do usuário administrador"
+          className="rounded-full "
+        />
       </div>
-    </div>
+    </Layout>
   )
 }
