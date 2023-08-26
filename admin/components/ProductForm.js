@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Spinner from "./Spinner";
 
 export default function ProductForm({
@@ -8,20 +8,29 @@ export default function ProductForm({
     name: existingName,
     description: existingDescription,
     price: existingPrice,
-    images: existingImages
+    images: existingImages,
+    category: assignedCategory
 }) {
     const [name, setName] = useState(existingName || "");
     const [description, setDescription] = useState(existingDescription || "");
+    const [category, setCategory] = useState(assignedCategory || "")
     const [price, setPrice] = useState(existingPrice || "");
     const [images, setImages] = useState(existingImages || []);
     const [isUploading, setIsUploading] = useState(false);
+    const [categories, setCategories] = useState([]);
 
     const router = useRouter();
+
+    useEffect(() => {
+        axios.get("/api/categories").then(result => {
+            setCategories(result.data);
+        })
+    }, []);
 
     async function saveProduct(e) {
         e.preventDefault();
 
-        const data = { name, description, price, images }
+        const data = { name, description, price, images, category }
 
         if (_id) {
             await axios.put('/api/products', { ...data, _id })
@@ -57,11 +66,21 @@ export default function ProductForm({
                 value={name}
                 onChange={(e) => setName(e.target.value)}
             />
+            <label>Categoria</label>
+            <select
+                value={category}
+                onChange={e => setCategory(e.target.value)}
+            >
+                <option value="">Selecione uma Categoria</option>
+                {categories.length > 0 && categories.map(category => (
+                    <option key={category._id} value={category._id}>{category.name}</option>
+                ))}
+            </select>
             <label>Fotos</label>
             <div className="mb-2 flex flex-wrap gap-2">
                 {!!images?.length && images.map(link => (
                     <div key={link} className="h-24">
-                        <img src={link} alt="Imagem do produto" className="rounded-md"/>
+                        <img src={link} alt="Imagem do produto" className="rounded-md" />
                     </div>
                 ))}
                 {isUploading && (
