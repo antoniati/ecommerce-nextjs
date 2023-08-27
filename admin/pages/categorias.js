@@ -22,7 +22,13 @@ function Categories({ swal }) {
 
     async function saveCategory(e) {
         e.preventDefault();
-        const data = { name };
+        const data = { 
+            name,
+            properties: properties.map((property) => ({
+                name: property.name,
+                values: property.values.split(',')
+            }))
+        };
 
         if (subCategory) {
             data.subCategory = subCategory;
@@ -37,6 +43,7 @@ function Categories({ swal }) {
         }
         setName("");
         setSubCategory("");
+        setProperties([]);
         fetchCategories();
     }
 
@@ -45,6 +52,10 @@ function Categories({ swal }) {
         setEditedCategory(category);
         setName(category.name);
         setSubCategory(category.parent?._id);
+        setProperties(category.properties.map(({name, values}) => ({
+            name,
+            values: values.join(',')
+        })));
     }
 
     function deleteCategory(category) {
@@ -130,7 +141,7 @@ function Categories({ swal }) {
                         type="button"
                         className="btn-default text-base mb-2"
                     >
-                        Adicioce propriedades ao produto
+                        Adicione propriedades
                     </button>
                     {properties.length > 0 && properties.map((property, index) => (
                         <div className="flex gap-1 mb-2" key={index}>
@@ -163,6 +174,7 @@ function Categories({ swal }) {
                                 setEditedCategory(null)
                                 setName("");
                                 setSubCategory("");
+                                setProperties([]);
                             }}
                         >
                             Cancelar
