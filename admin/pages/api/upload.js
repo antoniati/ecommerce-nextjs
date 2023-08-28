@@ -3,6 +3,7 @@ import {PutObjectCommand, S3Client} from "@aws-sdk/client-s3"
 import mime from "mime-types";
 import fs from "fs"
 import mongooseConnect from "@/lib/mongoose";
+import { isAdminRequest } from "./auth/[...nextauth]";
 
 export default async function handle(req, res) {
     await mongooseConnect();
