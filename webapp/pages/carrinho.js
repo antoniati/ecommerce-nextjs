@@ -213,13 +213,13 @@ export default function CartPage() {
                     {cartProducts?.length > 0 && (
                         <Box>
                             <h2>Informações do Pedido</h2>
-                            <Form onSubmit={() => { }}>
-
+                            <Form method="POST" action="/api/checkout">
                                 <label>Nome:</label>
                                 <Input
                                     type="text"
                                     placeholder="Jhon Mackley"
                                     value={name}
+                                    name="name"
                                     onChange={e => setName(e.target.value)}
                                 />
                                 <label>Email:</label>
@@ -227,6 +227,7 @@ export default function CartPage() {
                                     type="email"
                                     placeholder="jhon.mackley@gmail.com"
                                     value={email}
+                                    name="email"
                                     onChange={e => setEmail(e.target.value)}
                                 />
                                 <label>CEP:</label>
@@ -234,6 +235,7 @@ export default function CartPage() {
                                     type="text"
                                     placeholder="Ex: 12500000"
                                     value={cep}
+                                    name="cep"
                                     onChange={e => setCep(e.target.value)}
                                 />
                                 <label>Cidade:</label>
@@ -241,6 +243,7 @@ export default function CartPage() {
                                     type="text"
                                     placeholder="Ex: Racon"
                                     value={city}
+                                    name="city"
                                     onChange={e => setCity(e.target.value)}
                                 />
                                 <label>Rua:</label>
@@ -248,6 +251,7 @@ export default function CartPage() {
                                     type="text"
                                     placeholder="Ex: Rua, aproved, nº1"
                                     value={street}
+                                    name="street"
                                     onChange={e => setStreet(e.target.value)}
                                 />
                                 <label>Telefone:</label>
@@ -255,8 +259,10 @@ export default function CartPage() {
                                     type="text"
                                     placeholder="(xx)XXXXX-XXXX"
                                     value={phone}
+                                    name="phone"
                                     onChange={e => setPhone(e.target.value)}
                                 />
+                                <input type="hidden" name="products" value={cartProducts.join(',')}/>
                                 <ButtonPayment type="submit">
                                     Finalizar Compra
                                 </ButtonPayment>
