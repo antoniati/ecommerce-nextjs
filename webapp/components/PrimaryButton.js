@@ -16,9 +16,9 @@ const StyledButton = styled.button`
     }
     `
 
-export default function PrimaryButton({ children}) {
+export default function PrimaryButton({ children, ...rest}) {
     return (
-        <StyledButton>
+        <StyledButton {...rest}>
             {children}
         </StyledButton>
     )
