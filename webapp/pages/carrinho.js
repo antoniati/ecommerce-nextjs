@@ -140,12 +140,28 @@ export default function CartPage() {
         removeProduct(id);
     }
 
+    async function goToPayment() {
+       const response = await axios.post("/api/checkout", {
+            name,
+            email,
+            city,
+            cep,
+            street,
+            phone,
+            cartProducts,
+        })
+        if(response.data.url) {
+            window.location = response.data.url;
+        }
+        
+    }
+
     let total = 0;
     for (const productId of cartProducts) {
         const price = products.find(product => product._id === productId)?.price || 0;
         total += price;
     }
-
+    
     return (
         <>
             <Header />
@@ -213,7 +229,6 @@ export default function CartPage() {
                     {cartProducts?.length > 0 && (
                         <Box>
                             <h2>Informações do Pedido</h2>
-                            <Form method="POST" action="/api/checkout">
                                 <label>Nome:</label>
                                 <Input
                                     type="text"
@@ -262,11 +277,9 @@ export default function CartPage() {
                                     name="phone"
                                     onChange={e => setPhone(e.target.value)}
                                 />
-                                <input type="hidden" name="products" value={cartProducts.join(',')}/>
-                                <ButtonPayment type="submit">
+                                <ButtonPayment onClick={goToPayment}>
                                     Finalizar Compra
                                 </ButtonPayment>
-                            </Form>
                         </Box>
                     )}
                 </ColumnsWrapper>

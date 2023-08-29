@@ -17,11 +17,11 @@ export default async function handler(req, res) {
         cep,
         street,
         phone,
-        products,
+        cartProducts,
     } = req.body;
 
     await mongooseConnect();
-    const productsIds = products.split(',');
+    const productsIds = cartProducts;
     const uniqueIds = [...new Set(productsIds)];
     const productsInfos = await Product.find({_id:uniqueIds})
     let line_items = [];
@@ -55,7 +55,7 @@ export default async function handler(req, res) {
         line_items,
         mode: "payment",
         customer_email: email,
-        success_url: process.env.PUBLIC_URL + "/cart?success=1",
+        success_url: process.env.PUBLIC_URL + "/sucesso",
         cancel_url: process.env.PUBLIC_URL + "/cart?canceled=1",
         metadata: {orderId: OrderDoc._id.toString()},
 
