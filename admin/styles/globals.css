@@ -35,7 +35,8 @@ table.basic tbody {
     @apply bg-white w-full rounded-lg;
 }
 
-table.basic thead tr td {
+table.basic thead tr td,
+table.basic thead tr th {
     @apply p-4 bg-gray-200 border-y-2 border-gray-300 text-gray-600 font-bold;
 }
 

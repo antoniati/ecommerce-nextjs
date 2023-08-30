@@ -115,7 +115,8 @@ const FooterCart = styled.tr`
 `
 
 export default function CartPage() {
-    const { cartProducts, addProduct, removeProduct } = useContext(CartContext);
+    const { cartProducts, addProduct, removeProduct, clearCart } = useContext(CartContext);
+    const [isSuccess, setIsSuccess] = useState(false);
     const [products, setProducts] = useState([]);
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -132,6 +133,13 @@ export default function CartPage() {
         }
     }, [cartProducts])
 
+    useEffect(() => {
+        if (window?.location.href.includes("success")) {
+            setIsSuccess(true)
+            clearCart();
+        }
+    }, [])
+
     function moreThisProduct(id) {
         addProduct(id);
     }
@@ -141,7 +149,7 @@ export default function CartPage() {
     }
 
     async function goToPayment() {
-       const response = await axios.post("/api/checkout", {
+        const response = await axios.post("/api/checkout", {
             name,
             email,
             city,
@@ -150,10 +158,10 @@ export default function CartPage() {
             phone,
             cartProducts,
         })
-        if(response.data.url) {
+        if (response.data.url) {
             window.location = response.data.url;
         }
-        
+
     }
 
     let total = 0;
@@ -161,7 +169,17 @@ export default function CartPage() {
         const price = products.find(product => product._id === productId)?.price || 0;
         total += price;
     }
-    
+
+    if (isSuccess) {
+        <body>
+            <Header />
+            <Center>
+                <h1>Seu pagamento foi aprovado</h1>
+                <p>Nós lhe enviaremos um email quando seu pedido for eviado</p>
+            </Center>
+        </body>
+    }
+
     return (
         <>
             <Header />
@@ -229,57 +247,57 @@ export default function CartPage() {
                     {cartProducts?.length > 0 && (
                         <Box>
                             <h2>Informações do Pedido</h2>
-                                <label>Nome:</label>
-                                <Input
-                                    type="text"
-                                    placeholder="Jhon Mackley"
-                                    value={name}
-                                    name="name"
-                                    onChange={e => setName(e.target.value)}
-                                />
-                                <label>Email:</label>
-                                <Input
-                                    type="email"
-                                    placeholder="jhon.mackley@gmail.com"
-                                    value={email}
-                                    name="email"
-                                    onChange={e => setEmail(e.target.value)}
-                                />
-                                <label>CEP:</label>
-                                <Input
-                                    type="text"
-                                    placeholder="Ex: 12500000"
-                                    value={cep}
-                                    name="cep"
-                                    onChange={e => setCep(e.target.value)}
-                                />
-                                <label>Cidade:</label>
-                                <Input
-                                    type="text"
-                                    placeholder="Ex: Racon"
-                                    value={city}
-                                    name="city"
-                                    onChange={e => setCity(e.target.value)}
-                                />
-                                <label>Rua:</label>
-                                <Input
-                                    type="text"
-                                    placeholder="Ex: Rua, aproved, nº1"
-                                    value={street}
-                                    name="street"
-                                    onChange={e => setStreet(e.target.value)}
-                                />
-                                <label>Telefone:</label>
-                                <Input
-                                    type="text"
-                                    placeholder="(xx)XXXXX-XXXX"
-                                    value={phone}
-                                    name="phone"
-                                    onChange={e => setPhone(e.target.value)}
-                                />
-                                <ButtonPayment onClick={goToPayment}>
-                                    Finalizar Compra
-                                </ButtonPayment>
+                            <label>Nome:</label>
+                            <Input
+                                type="text"
+                                placeholder="Jhon Mackley"
+                                value={name}
+                                name="name"
+                                onChange={e => setName(e.target.value)}
+                            />
+                            <label>Email:</label>
+                            <Input
+                                type="email"
+                                placeholder="jhon.mackley@gmail.com"
+                                value={email}
+                                name="email"
+                                onChange={e => setEmail(e.target.value)}
+                            />
+                            <label>CEP:</label>
+                            <Input
+                                type="text"
+                                placeholder="Ex: 12500000"
+                                value={cep}
+                                name="cep"
+                                onChange={e => setCep(e.target.value)}
+                            />
+                            <label>Cidade:</label>
+                            <Input
+                                type="text"
+                                placeholder="Ex: Racon"
+                                value={city}
+                                name="city"
+                                onChange={e => setCity(e.target.value)}
+                            />
+                            <label>Rua:</label>
+                            <Input
+                                type="text"
+                                placeholder="Ex: Rua, aproved, nº1"
+                                value={street}
+                                name="street"
+                                onChange={e => setStreet(e.target.value)}
+                            />
+                            <label>Telefone:</label>
+                            <Input
+                                type="text"
+                                placeholder="(xx)XXXXX-XXXX"
+                                value={phone}
+                                name="phone"
+                                onChange={e => setPhone(e.target.value)}
+                            />
+                            <ButtonPayment onClick={goToPayment}>
+                                Finalizar Compra
+                            </ButtonPayment>
                         </Box>
                     )}
                 </ColumnsWrapper>
